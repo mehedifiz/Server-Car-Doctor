@@ -46,9 +46,9 @@ app.get('/services/:id', async(req ,res)=>{
 const id = req.params.id;
 const query = {_id : new ObjectId(id)};
 const option ={
-    projection:{title :1 ,price : 1 , service_id : 1}
+    projection:{title :1 ,price : 1 , service_id : 1 , img : 1}
 }
-
+console.log(option)
 const result = await serviceCollection.findOne(query , option)
 res.send(result)
 
@@ -63,6 +63,19 @@ app.post('/bookings', async(req , res)=>{
 
     const result = await orderCollection.insertOne(booking)
     res.send(result)
+})
+
+app.get('/bookings', async(req , res)=>{
+  console.log(req.query.email)
+  let query ={}
+
+  if(req.query.email){
+    query = {email : req.query.email}
+  }
+
+  const result = await orderCollection.find(query).toArray()
+  res.send(result)
+
 })
  
 

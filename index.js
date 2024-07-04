@@ -40,7 +40,7 @@ app.get('/services',async (req , res)=>{
 })
 
 
-  
+
 
 app.get('/services/:id', async(req ,res)=>{
 
@@ -73,6 +73,16 @@ app.get('/bookings', async(req , res)=>{
   if(req.query.email){
     query = {email : req.query.email}
   }
+
+// delete
+
+app.delete('/bookings/:id' , async(req , res)=>{
+  const id = new ObjectId(req.params.id);
+  const query = {_id : id}
+  const result = await orderCollection.deleteOne(query)
+  res.send(result)
+})
+
 
   const result = await orderCollection.find(query).toArray()
   res.send(result)

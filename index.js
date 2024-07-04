@@ -117,3 +117,4 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Car server running on port ${port}`);
 });
+module.exports = app;

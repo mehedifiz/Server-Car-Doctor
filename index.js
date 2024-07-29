@@ -3,16 +3,22 @@ const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const app = express();
+const jwt = require('jsonwebtoken')
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5174', 
+    credentials: true,
+  }));
+  
 app.use(express.json());
 
 
 console.log(process.env.DB_PASS)
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.swu9d.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ensactw.mongodb.net/?appName=Cluster0`;
+
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -30,6 +36,21 @@ async function run() {
 
         const serviceCollection = client.db('carDoctor').collection('services');
         const bookingCollection = client.db('carDoctor').collection('bookings');
+            //auth
+
+            app.post('/jwt' , async(req ,res)=>{
+                const user = req.body;
+                console.log('user for token' ,user)
+
+                const token = jwt .sign(user , process.env.ACCESS_TOKEN , {
+                    expiresIn: '1h'
+                })
+                res.send({token})
+            })
+
+
+
+        //serveres 
 
         app.get('/services', async (req, res) => {
             const cursor = serviceCollection.find();
